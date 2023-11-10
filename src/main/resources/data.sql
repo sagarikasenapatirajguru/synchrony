@@ -1,1 +1,2 @@
-create table USER (ID INT,NAME VARCHAR(200),LOGIN varchar(200), PASSWORD varchar(200))
+create table users (login varchar(200) PRIMARY KEY,password VARCHAR(200),firstName varchar(200), lastName varchar(200),
+emailId varchar(200), profession varchar(200));
