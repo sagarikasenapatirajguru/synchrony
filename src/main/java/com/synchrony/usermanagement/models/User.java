@@ -30,7 +30,8 @@ public class User {
     private String lastName;
     @Column(nullable = false)
     private String emailId;
-
+    @Column(nullable = true)
+    private String imageLink;
     @Column(nullable = true)
     private String profession;
 }

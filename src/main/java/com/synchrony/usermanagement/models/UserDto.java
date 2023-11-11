@@ -16,4 +16,5 @@ public class UserDto {
     private String lastName;
     private String emailId;
     private String profession;
+    private String imageLink;
 }

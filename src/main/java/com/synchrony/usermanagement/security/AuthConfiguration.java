@@ -34,12 +34,13 @@ public class AuthConfiguration {
                         authorize.requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/index")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/users")).authenticated()
-                            //    .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/profile")).authenticated()
+                                .requestMatchers(new AntPathRequestMatcher("/upload")).authenticated()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/users")
+                                .defaultSuccessUrl("/profile")
                                 .permitAll()
                 ).logout(
                         logout -> logout

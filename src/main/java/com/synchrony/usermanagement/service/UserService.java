@@ -4,11 +4,13 @@ import com.synchrony.usermanagement.models.User;
 import com.synchrony.usermanagement.models.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     void saveUser(UserDto user);
 
-    User findUserByLogin(String login);
+    Optional<UserDto> findUserByLogin(String login);
 
-    List<User> findAllUser();
+    List<UserDto> findAllUser();
+    UserDto updateImageLinkByLogin(String login,String link);
 }

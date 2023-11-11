@@ -1,21 +1,31 @@
 package com.synchrony.usermanagement.controllers;
 
 
-import com.synchrony.usermanagement.models.User;
+
 import com.synchrony.usermanagement.models.UserDto;
 import com.synchrony.usermanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserManagmentController {
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
 
     @Autowired
     private UserService userService;
@@ -35,8 +45,8 @@ public class UserManagmentController {
     public String registration(@ModelAttribute("user") UserDto user,
                                BindingResult result,
                                Model model) {
-        User existing = userService.findUserByLogin(user.getLogin());
-        if (existing != null) {
+        Optional<UserDto> existing = userService.findUserByLogin(user.getLogin());
+        if (existing.isPresent()) {
             result.rejectValue("login", null, "There is already an account registered with that email");
         }
         if (result.hasErrors()) {
@@ -49,9 +59,27 @@ public class UserManagmentController {
 
     @GetMapping("/users")
     public String listRegisteredUsers(Model model) {
-        List<User> users = userService.findAllUser();
+        List<UserDto> users = userService.findAllUser();
         model.addAttribute("users", users);
         return "users";
+    }
+    @GetMapping("/profile")
+    public String profileDisplay(Authentication authentication,Model model) {
+        User authenticateduser = (User) authentication.getPrincipal();
+        Optional<UserDto> userDto = userService.findUserByLogin(authenticateduser.getUsername());
+        model.addAttribute("user",userDto.get());
+        return "profile";
+    }
+    @GetMapping("/upload")
+    public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws IOException {
+        StringBuilder fileNames = new StringBuilder();
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+        fileNames.append(file.getOriginalFilename());
+        Files.write(fileNameAndPath, file.getBytes());
+       // User authenticateduser = (User) authentication.getPrincipal();
+        UserDto userDto = userService.updateImageLinkByLogin("sa",fileNames.toString());
+        model.addAttribute("user", userDto);
+        return "profile";
     }
 
 }
