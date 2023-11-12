@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
@@ -39,15 +40,17 @@ public class OAuth2ClientConfig {
     @Value("${spring.security.oauth2.client.registration.imgur.client-id}")
     private String clientId;
 
+    @Value("${spring.security.oauth2.client.registration.imgur.redirect-uri}")
+    private String redirectUri;
     @Bean
     protected OAuth2ProtectedResourceDetails resource() {
-        ClientCredentialsResourceDetails  resource;
-        resource = new ClientCredentialsResourceDetails ();
+        AuthorizationCodeResourceDetails  resource;
+        resource = new AuthorizationCodeResourceDetails();
 
         resource.setAccessTokenUri(tokenUrl);
         resource.setClientId(clientId);
         resource.setClientSecret(clientSecret);
-        //resource.setAuthenticationScheme(AuthenticationScheme.none);
+        resource.setPreEstablishedRedirectUri(redirectUri);
         //resource.setScope(scopes);
         return resource;
     }
