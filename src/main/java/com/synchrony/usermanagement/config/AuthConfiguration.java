@@ -1,4 +1,4 @@
-package com.synchrony.usermanagement.security;
+package com.synchrony.usermanagement.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

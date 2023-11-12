@@ -3,8 +3,11 @@ package com.synchrony.usermanagement.service;
 import com.synchrony.usermanagement.models.User;
 import com.synchrony.usermanagement.models.UserDto;
 import com.synchrony.usermanagement.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    ImgurApiService imgurApiService;
     final private UserRepository userRepository;
     final private PasswordEncoder passwordEncoder;
 
@@ -50,7 +55,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateImageLinkByLogin(String login,String link) {
+    @Transactional
+    public UserDto updateImageLinkByLogin(String login, String link, MultipartFile file) {
+        imgurApiService.postUploadedImage("https://api.imgur.com/3/upload",file);
         userRepository.updateimageLinkByLogin(login,link);
         User user = userRepository.findUserByLogin(login);
         return convertUserToDTO(user);

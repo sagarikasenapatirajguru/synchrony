@@ -10,10 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,7 +22,7 @@ import java.util.Optional;
 
 @Controller
 public class UserManagmentController {
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\uploads";
 
     @Autowired
     private UserService userService;
@@ -47,7 +44,7 @@ public class UserManagmentController {
                                Model model) {
         Optional<UserDto> existing = userService.findUserByLogin(user.getLogin());
         if (existing.isPresent()) {
-            result.rejectValue("login", null, "There is already an account registered with that email");
+            result.rejectValue("login", null, "There is already an account registered with that login id");
         }
         if (result.hasErrors()) {
             model.addAttribute("user", user);
@@ -70,16 +67,23 @@ public class UserManagmentController {
         model.addAttribute("user",userDto.get());
         return "profile";
     }
-    @GetMapping("/upload")
+    @PostMapping("/upload")
     public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws IOException {
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileNames.append(file.getOriginalFilename());
         Files.write(fileNameAndPath, file.getBytes());
        // User authenticateduser = (User) authentication.getPrincipal();
-        UserDto userDto = userService.updateImageLinkByLogin("sa",fileNames.toString());
+        UserDto userDto = userService.updateImageLinkByLogin("sa",fileNames.toString(),file);
         model.addAttribute("user", userDto);
         return "profile";
     }
+    @GetMapping("/authorized/")
+    public String redirectUrlServiceForAccessToken(@PathVariable("access_token") String accesstoken) {
+
+        String  recievedToken = accesstoken;
+        return "profile";
+    }
+
 
 }
