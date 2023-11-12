@@ -1,4 +1,3 @@
-/*
 package com.synchrony.usermanagement.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +59,3 @@ public class OAuth2ClientConfig {
     }
 }
 
-*/
