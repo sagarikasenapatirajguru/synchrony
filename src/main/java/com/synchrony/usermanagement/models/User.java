@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,12 +16,11 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Table(name="users")
-public class User {
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(nullable = false)
     private String login;
-
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
@@ -34,4 +33,8 @@ public class User {
     private String imageLink;
     @Column(nullable = true)
     private String profession;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "login", referencedColumnName = "login")
+    List<UserImages> userImages = new ArrayList< >();
+
 }

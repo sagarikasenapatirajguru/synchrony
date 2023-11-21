@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User,String> {
     @Modifying
     @Query("update User set imageLink=:link where login=:login")
     void updateimageLinkByLogin(@Param("login") String login,@Param("link") String link);
+
 }

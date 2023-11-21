@@ -22,7 +22,8 @@ import java.util.Optional;
 
 @Controller
 public class UserManagmentController {
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\uploads";
+    //public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\uploads";
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.home") ;
 
     @Autowired
     private UserService userService;
@@ -68,13 +69,14 @@ public class UserManagmentController {
         return "profile";
     }
     @PostMapping("/upload")
-    public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws IOException {
+    public String uploadImage(Model model, @RequestParam("image") MultipartFile file) throws Exception {
         StringBuilder fileNames = new StringBuilder();
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileNames.append(file.getOriginalFilename());
+        //Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY,"uploads", file.getOriginalFilename());
         Files.write(fileNameAndPath, file.getBytes());
        // User authenticateduser = (User) authentication.getPrincipal();
-        UserDto userDto = userService.updateImageLinkByLogin("sa",fileNames.toString(),file);
+        UserDto userDto = userService.upload("sagarika",fileNames.toString(),file);
         model.addAttribute("user", userDto);
         return "profile";
     }

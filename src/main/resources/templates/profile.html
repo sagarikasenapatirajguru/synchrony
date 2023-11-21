@@ -32,15 +32,23 @@
             <th>Email</th>
             <th>Profession</th>
             <th>uploadedImage</th>
+            <th>delete Image</th>
         </tr>
         </thead>
         <tbody>
             <td th:text="${user.firstName}"></td>
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.emailId}"></td>
-            <td th:text="${user.profession}"></td>
-            <td> <img src="https://picsum.photos/200/300" alt="My Image"></img></td>
-        </tr>
+            <td th:text="${user.imageLink}"></td>
+
+<!--
+            <td> <img src="https://i.imgur.com/W0Li5NW.png" alt="My Image"></img></td>
+-->
+            <td> <img src="${user.imageLink}" alt="My Image"></img></td>
+<!--
+            <td><a href="<url value='/remove/${person.id}' />">Delete</a></td>
+-->
+            <td th:text="${user.imageLink}"></td>
         </tbody>
     </table>
 </div>
