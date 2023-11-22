@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImgurDto {
+public class ImgurResponseData {
     public String id;
     public Object title;
     public Object description;
@@ -40,5 +40,4 @@ public class ImgurDto {
     public String deletehash;
     public String name;
     public String link;
-    public ImgurConfig ad_config;
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ImgurResponse {
-    public ImgurDto data;
+    public ImgurResponseData data;
     public boolean success;
     public int status;
 }

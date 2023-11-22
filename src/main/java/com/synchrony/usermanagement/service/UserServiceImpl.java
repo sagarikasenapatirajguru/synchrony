@@ -7,6 +7,7 @@ import com.synchrony.usermanagement.models.UserDto;
 import com.synchrony.usermanagement.models.UserImages;
 import com.synchrony.usermanagement.repository.UserImagesRepository;
 import com.synchrony.usermanagement.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setProfession(dto.getProfession());
+        log.info("User is updated in the database");
         userRepository.save(user);
     }
 
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAllUser() {
         List<User> user= userRepository.findAll();
+        log.info("fetched all the users from the database");
         return user.stream().map(u -> convertUserToDTO(u)).collect(Collectors.toList());
     }
 
@@ -65,6 +69,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto upload(String login, String link, MultipartFile file) throws Exception {
         HttpResponse<String> response = imgurApiService.uploadToImgur(file.getBytes());
+        log.info("Uploaded to Imgur api successfully");
         if(response != null && response.statusCode() != 200){
             throw new Exception("Uploading failed");
         }
@@ -73,24 +78,13 @@ public class UserServiceImpl implements UserService {
         ImgurResponse root = objectMapper.readValue(json, ImgurResponse.class);
         User user = userRepository.findUserByLogin(login);
         userRepository.updateimageLinkByLogin(login,root.getData().getLink());
-        //Add entry in user_images table
         UserImages userImages = new UserImages();
         userImages.setImageLink(root.getData().getLink());
         userImages.setDeleteHash(root.getData().getDeletehash());
         userImages.setImageId(root.getData().getId());
         userImages.setLogin(login);
         userImagesRepository.saveAndFlush(userImages);
-
-    /*    //Get API call
-        HttpResponse<String> getResponse = imgurApiService.getUploadedImage(root.getData().getId());
-        ImgurResponse obj = objectMapper.readValue(getResponse.body(), ImgurResponse.class);
-
-        //Delete API call
-        HttpResponse<String> deleteResponse = imgurApiService.getUploadedImage(root.getData().getId());
-        ImgurResponse respObj = objectMapper.readValue(deleteResponse.body(), ImgurResponse.class);
-        if(respObj.getStatus() == 200) {
-            userImagesRepository.deleteByDeleteHash(root.getData().deletehash);
-        }*/
+        log.info("Database update with the response image link");
         return convertUserToDTO(user);
     }
 
