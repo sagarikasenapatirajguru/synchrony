@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -45,6 +46,7 @@ public class UserImagesService {
         return userImagesRepository.save(userImages).getId();
     }
 
+    @Transactional
     public void delete(final String id) throws IOException, InterruptedException {
         //Delete API call
         HttpResponse<String> deleteResponse = imgurApiService.deleteUploadedImage(id);
