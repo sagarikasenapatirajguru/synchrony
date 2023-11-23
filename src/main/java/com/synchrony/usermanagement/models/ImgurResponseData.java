@@ -40,4 +40,5 @@ public class ImgurResponseData {
     public String deletehash;
     public String name;
     public String link;
+    public AdConfig ad_config;
 }
