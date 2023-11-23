@@ -1,6 +1,5 @@
 package com.synchrony.usermanagement.service;
 
-import com.synchrony.usermanagement.models.User;
 import com.synchrony.usermanagement.models.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,5 +12,5 @@ public interface UserService {
     Optional<UserDto> findUserByLogin(String login);
 
     List<UserDto> findAllUser();
-    UserDto updateImageLinkByLogin(String login, String link, MultipartFile file);
+    UserDto upload(String login, String link, MultipartFile file) throws Exception;
 }

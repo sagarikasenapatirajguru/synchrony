@@ -32,6 +32,7 @@
             <th>Email</th>
             <th>Profession</th>
             <th>uploadedImage</th>
+            <th>delete Image</th>
         </tr>
         </thead>
         <tbody>
@@ -39,8 +40,7 @@
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.emailId}"></td>
             <td th:text="${user.profession}"></td>
-            <td> <img src="https://picsum.photos/200/300" alt="My Image"></img></td>
-        </tr>
+            <td> <img src="${user.imageLink}" alt="My Image"></img></td>
         </tbody>
     </table>
 </div>
